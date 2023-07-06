@@ -1,0 +1,44 @@
+class Calculator:
+    def add(self, x, y):
+        return x + y
+
+    def subtract(self, x, y):
+        return x - y
+
+    def multiply(self, x, y):
+        return x * y
+
+    def divide(self, x, y):
+        return x / y
+
+
+def test_calculator_add_positive():
+    calculator = Calculator()
+
+    result = calculator.add(3, 4)
+
+    assert result == 7, "Addition test failed"
+
+
+def test_calculator_subtract_positive():
+    calculator = Calculator()
+
+    result = calculator.subtract(10, 4)
+
+    assert result == 6, "Subtraction test failed"
+
+
+def test_calculator_multiply_positive():
+    calculator = Calculator()
+
+    result = calculator.multiply(5, 3)
+
+    assert result == 15, "Multiplication test failed"
+
+
+def test_calculator_divide_positive():
+    calculator = Calculator()
+
+    result = calculator.divide(10, 2)
+
+    assert result == 5, "Division test failed"
