@@ -1,0 +1,59 @@
+import requests
+
+# Тест-кейс 1: Получение списка всех питомцев
+def test_get_pets():
+    url = "https://petfriends.skillfactory.ru/api/pets"
+    response = requests.get(url)
+    assert response.status_code == 200, "Ошибка при получении списка питомцев"
+    
+
+# Тест-кейс 2: Создание нового питомца
+def test_create_pet():
+    url = "https://petfriends.skillfactory.ru/api/my_pets"
+    data = {
+        "name": "Мурзик",
+        "age": 3,
+        "breed": "домашний кот"
+    }
+    response = requests.post(url, json=data)
+    assert response.status_code == 200, "Ошибка при создании питомца"
+   
+
+# Тест-кейс 3: Обновление информации о питомце
+def test_update_pet():
+    pet_id = 1  # ID питомца, которого нужно обновить
+    url = f"https://petfriends.skillfactory.ru/api/my_pets/{pet_id}"
+    data = {
+        "name": "Барсик",
+        "age": 4,
+        "breed": "домашний кот"
+    }
+    response = requests.put(url, json=data)
+    assert response.status_code == 200, "Ошибка при обновлении информации о питомце"
+  
+
+# Тест-кейс 4: Удаление питомца
+def test_delete_pet():
+    pet_id = 1  # ID питомца, которого нужно удалить
+    url = f"https://petfriends.skillfactory.ru/api/my_pets/{pet_id}"
+    response = requests.delete(url)
+    assert response.status_code == 200, "Ошибка при удалении питомца"
+    
+
+# Тест-кейс 5: Получение информации о питомце
+def test_get_pet():
+    pet_id = 1  # ID питомца, информацию о котором нужно получить
+    url = f"https://petfriends.skillfactory.ru/api/pets/{pet_id}"
+    response = requests.get(url)
+    assert response.status_code == 200, "Ошибка при получении информации о питомце"
+   
+
+# Запуск всех тест-кейсов
+def run_tests():
+    test_get_pets()
+    test_create_pet()
+    test_update_pet()
+    test_delete_pet()
+    test_get_pet()
+
+run_tests()
