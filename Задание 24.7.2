@@ -1,0 +1,80 @@
+import requests
+
+def test_create_pet():
+    url = "https://example.com/api/create_pet_simple"
+    data = {
+        "name": "Мурзик",
+        "age": 3,
+        "breed": "домашний кот"
+    }
+    response = requests.post(url, data=data)
+    assert response.status_code == 200, "Ошибка при создании питомца"
+
+def test_set_photo():
+    url = "https://example.com/api/pets/set_photo/{pet_id}"
+    pet_id = 1
+    photo = {"file": open("photo.jpg", "rb")}
+    response = requests.post(url.format(pet_id=pet_id), files=photo)
+    assert response.status_code == 200, "Ошибка при установке фото питомца"
+
+def test_get_pets():
+    url = "https://example.com/api/pets"
+    response = requests.get(url)
+    assert response.status_code == 200, "Ошибка при получении списка питомцев"
+
+def test_get_key():
+    url = "https://example.com/api/key"
+    response = requests.get(url)
+    assert response.status_code == 200, "Ошибка при получении ключа авторизации"
+
+def test_invalid_auth_key():
+    url = "https://example.com/api/create_pet_simple"
+    headers = {"Authorization": "InvalidKey"}
+    data = {
+        "name": "Мурзик",
+        "age": 3,
+        "breed": "домашний кот"
+    }
+    response = requests.post(url, headers=headers, data=data)
+    assert response.status_code == 401, "Система не обработала неверный ключ авторизации"
+
+def test_empty_parameters():
+    url = "https://example.com/api/create_pet_simple"
+    data = {}
+    response = requests.post(url, data=data)
+    assert response.status_code == 400, "Система не обработала пустые параметры запроса"
+def test_nonexistent_pet():
+    url = "https://example.com/api/pets/{pet_id}"
+    pet_id = 9999
+    response = requests.get(url.format(pet_id=pet_id))
+    assert response.status_code == 404, "Система не обработала получение несуществующего питомца"
+
+def test_invalid_parameter_format():
+    url = "https://example.com/api/create_pet_simple"
+    data = {
+        "name": "Мурзик",
+        "age": "три",
+        "breed": "домашний кот"
+    }
+    response = requests.post(url, data=data)
+    assert response.status_code == 400, "Система не обработала некорректный формат параметра"
+
+def test_missing_required_parameter():
+    url = "https://example.com/api/create_pet_simple"
+    data = {
+        "name": "Мурзик",
+        "age": 3
+    }
+    response = requests.post(url, data=data)
+    assert response.status_code == 400, "Система не обработала отсутствующий обязательный параметр"
+
+def test_successful_update():
+    url = "https://example.com/api/pets/{pet_id}"
+    pet_id = 1
+    data = {
+        "name": "Барсик",
+        "age": 4,
+        "breed": "домашний кот"
+    }
+    response = requests.put(url.format(pet_id=pet_id), data=data)
+    assert response.status_code == 200, "Ошибка при успешном обновлении данных питомца"
