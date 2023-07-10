@@ -1,0 +1,49 @@
+import pytest
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+@pytest.fixture
+def pet_cards(driver):
+    driver.get("https://example.com/pet-cards")
+
+    # Устанавливаем неявное ожидание для всех элементов веб-страницы
+    driver.implicitly_wait(10)
+
+    return driver
+
+def test_pet_cards_visibility(pet_cards):
+    # Явное ожидание видимости фото питомца
+    photo = WebDriverWait(pet_cards, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".pet-photo")))
+    assert photo.is_displayed()
+
+    # Проверка, что фото имеет ненулевую ширину и высоту
+    assert photo.size["width"] > 0
+    assert photo.size["height"] > 0
+
+    # Проверка, что атрибут src фото не пустой
+    assert photo.get_attribute("src") != ""
+    
+    
+@pytest.fixture
+def pet_table(driver):
+    driver.get("https://example.com/pet-table")
+
+    # Устанавливаем неявное ожидание для всех элементов веб-страницы
+    driver.implicitly_wait(10)
+
+    return driver
+
+
+def test_pet_table_elements(pet_table):
+    # Явное ожидание присутствия заголовка таблицы
+    table_header = WebDriverWait(pet_table, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "#table-header")))
+    assert table_header.is_displayed()
+
+    # Явное ожидание присутствия строк в таблице
+    table_rows = WebDriverWait(pet_table, 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".table-row")))
+    assert len(table_rows) > 0
+
+    # Явное ожидание видимости каждой строки в таблице
+    for row in table_rows:
+        assert row.is_displayed()
