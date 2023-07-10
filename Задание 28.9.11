@@ -1,0 +1,106 @@
+import requests
+import pytest
+
+# Параметры для авторизации, нужно заменить их на свои
+app_id = "your_app_id"
+app_secret = "your_app_secret"
+access_token = "your_access_token"
+page_id = "your_page_id"
+user_id = "your_user_id"
+
+@pytest.fixture(scope="session")
+def api_url():
+    return "https://graph.facebook.com/v17.0"
+
+def test_get_access_token(api_url):
+    url = f"{api_url}/oauth/access_token"
+    params = {
+        "grant_type": "client_credentials",
+        "client_id": app_id,
+        "client_secret": app_secret
+    }
+    response = requests.get(url, params=params)
+    assert response.status_code == 200
+    assert "access_token" in response.json()
+
+def test_get_user_access_token(api_url):
+    url = f"{api_url}/oauth/access_token"
+    params = {
+        "grant_type": "client_credentials",
+        "client_id": app_id,
+        "client_secret": app_secret,
+        "scope": "instagram_basic,pages_show_list"
+    }
+    response = requests.get(url, params=params)
+    assert response.status_code == 200
+    assert "access_token" in response.json()
+
+def test_get_pages(api_url):
+    url = f"{api_url}/me/accounts"
+    params = {
+        "access_token": access_token
+    }
+    response = requests.get(url, params=params)
+    assert response.status_code == 200
+    assert "data" in response.json()
+
+def test_get_instagram_business_account(api_url):
+    url = f"{api_url}/{page_id}"
+    params = {
+        "fields": "instagram_business_account",
+        "access_token": access_token
+    }
+    response = requests.get(url, params=params)
+    assert response.status_code == 200
+    assert "instagram_business_account" in response.json()
+
+def test_get_media_objects(api_url):
+    url = f"{api_url}/{user_id}/media"
+    params = {
+        "access_token": access_token
+    }
+    response = requests.get(url, params=params)
+    assert response.status_code == 200
+    assert "data" in response.json()
+
+def test_get_media_object(api_url):
+    media_id = "your_media_id"
+    url = f"{api_url}/{media_id}"
+    params = {
+        "access_token": access_token
+    }
+    response = requests.get(url, params=params)
+    assert response.status_code == 200
+    assert "id" in response.json()
+
+def test_get_user_info(api_url):
+    url = f"{api_url}/me"
+    params = {
+        "fields": "id,username",
+        "access_token": access_token
+    }
+    response = requests.get(url, params=params)
+    assert response.status_code == 200
+    assert "id" in response.json()
+    assert "username" in response.json()
+
+def test_get_user_media(api_url):
+    user_id = "your_user_id"
+    url = f"{api_url}/{user_id}/media"
+    params = {
+        "access_token": access_token
+    }
+    response = requests.get(url, params=params)
+    assert response.status_code == 200
+    assert "data" in response.json()
+
+def test_get_media_insights(api_url):
+    media_id = "your_media_id"
+    url = f"{api_url}/{media_id}/insights"
+    params = {
+        "metric": "engagement,reach",
+        "access_token": access_token
+    }
+    response = requests.get(url, params=params)
+    assert response.status_code == 200
+    assert "data" in response.json()
